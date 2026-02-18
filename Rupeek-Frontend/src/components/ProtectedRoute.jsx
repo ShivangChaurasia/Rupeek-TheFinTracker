@@ -9,8 +9,8 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" />;
   }
 
-  // If user is logged in but not onboarded, and trying to access something other than onboarding
-  if (userProfile && !userProfile.isOnboarded && window.location.pathname !== '/onboarding') {
+  // If user is logged in but not onboarded (or profil doesn't exist yet), and trying to access something other than onboarding
+  if ((!userProfile || !userProfile.isOnboarded) && window.location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" />;
   }
 
