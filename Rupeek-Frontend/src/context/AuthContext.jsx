@@ -7,7 +7,8 @@ import {
     signInWithPopup,
     GoogleAuthProvider
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebase/config";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db, googleProvider } from "../firebase/config";
 
 const AuthContext = createContext();
 
@@ -17,6 +18,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
+    const [userProfile, setUserProfile] = useState(null);
     const [loading, setLoading] = useState(true);
 
     function signup(email, password) {
@@ -36,16 +38,39 @@ export function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        let profileUnsubscribe;
+
+        const authUnsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
-            setLoading(false);
+
+            if (user) {
+                // Subscribe to user profile
+                profileUnsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
+                    if (doc.exists()) {
+                        setUserProfile(doc.data());
+                    } else {
+                        setUserProfile(null);
+                    }
+                    setLoading(false);
+                }, (error) => {
+                    console.error("Error fetching user profile:", error);
+                    setLoading(false);
+                });
+            } else {
+                setUserProfile(null);
+                setLoading(false);
+            }
         });
 
-        return unsubscribe;
+        return () => {
+            authUnsubscribe();
+            if (profileUnsubscribe) profileUnsubscribe();
+        };
     }, []);
 
     const value = {
         currentUser,
+        userProfile,
         signup,
         login,
         loginWithGoogle,

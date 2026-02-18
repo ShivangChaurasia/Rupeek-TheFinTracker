@@ -49,20 +49,20 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd }) {
                         <button
                             type="button"
                             className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${formData.type === 'income'
-                                    ? 'bg-background shadow-sm text-foreground'
-                                    : 'text-muted-foreground hover:text-foreground'
+                                ? 'bg-background shadow-sm text-foreground'
+                                : 'text-muted-foreground hover:text-foreground'
                                 }`}
-                            onClick={() => setFormData({ ...formData, type: 'income' })}
+                            onClick={() => setFormData({ ...formData, type: 'income', category: 'Salary' })}
                         >
                             Income
                         </button>
                         <button
                             type="button"
                             className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${formData.type === 'expense'
-                                    ? 'bg-background shadow-sm text-foreground'
-                                    : 'text-muted-foreground hover:text-foreground'
+                                ? 'bg-background shadow-sm text-foreground'
+                                : 'text-muted-foreground hover:text-foreground'
                                 }`}
-                            onClick={() => setFormData({ ...formData, type: 'expense' })}
+                            onClick={() => setFormData({ ...formData, type: 'expense', category: '' })}
                         >
                             Expense
                         </button>

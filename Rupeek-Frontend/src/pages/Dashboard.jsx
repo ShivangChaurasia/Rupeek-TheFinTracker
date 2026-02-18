@@ -6,9 +6,11 @@ import Button from '../components/Button';
 import AddTransactionModal from '../components/AddTransactionModal';
 import { format } from 'date-fns';
 
+import SalaryPrompt from '../components/SalaryPrompt';
+
 export default function Dashboard() {
-  const { currentUser } = useAuth(); // We might need user preferences like currency later
-  const { transactions, loading } = useTransactions();
+  const { currentUser, userProfile } = useAuth(); // We might need user preferences like currency later
+  const { transactions, totalBalance, loading } = useTransactions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addTransaction } = useTransactions();
 
@@ -39,7 +41,9 @@ export default function Dashboard() {
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Hello, {userProfile?.name?.split(' ')[0] || 'User'}!
+          </h1>
           <p className="text-muted-foreground mt-1">
             Overview of your finances for this month
           </p>
@@ -60,10 +64,10 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="text-2xl font-bold">
-            {summary.balance >= 0 ? '+' : '-'}{'₹'}{Math.abs(summary.balance).toLocaleString()}
+            {totalBalance >= 0 ? '+' : '-'}{'₹'}{Math.abs(totalBalance).toLocaleString()}
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Current available balance
+            All-time balance
           </p>
         </div>
 
@@ -98,6 +102,39 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Budget Overview */}
+      {userProfile?.monthlyIncome && (
+        <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold tracking-tight">Budget Overview</h3>
+            <span className="text-sm text-muted-foreground">
+              Monthly Income: {userProfile.currency}{userProfile.monthlyIncome.toLocaleString()}
+            </span>
+          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Total Expenses</span>
+                <span className="font-medium">{Math.round((summary.expense / userProfile.monthlyIncome) * 100)}% Used</span>
+              </div>
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-red-500 transition-all duration-500"
+                  style={{ width: `${Math.min((summary.expense / userProfile.monthlyIncome) * 100, 100)}%` }}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Remaining Budget</span>
+              <span className={`font-bold ${(userProfile.monthlyIncome - summary.expense) < 0 ? 'text-red-500' : 'text-green-600'
+                }`}>
+                {userProfile.currency}{(userProfile.monthlyIncome - summary.expense).toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Recent Transactions */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold tracking-tight">Recent Transactions</h2>
@@ -118,8 +155,8 @@ export default function Dashboard() {
                 <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors group">
                   <div className="flex items-center gap-4">
                     <div className={`p-2 rounded-full ${transaction.type === 'income'
-                        ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                      ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
                       }`}>
                       {transaction.type === 'income' ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                     </div>
@@ -129,8 +166,8 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className={`font-semibold ${transaction.type === 'income'
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-red-600 dark:text-red-400'
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-red-600 dark:text-red-400'
                     }`}>
                     {transaction.type === 'income' ? '+' : '-'}₹{parseFloat(transaction.amount).toLocaleString()}
                   </div>
@@ -146,6 +183,7 @@ export default function Dashboard() {
         onClose={() => setIsModalOpen(false)}
         onAdd={addTransaction}
       />
+      <SalaryPrompt />
     </div>
   );
 }

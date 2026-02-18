@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import Landing from './pages/Landing';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -21,6 +22,7 @@ function App() {
           <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <Routes>
               {/* Public Routes */}
+              <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
 
@@ -30,7 +32,7 @@ function App() {
                   <Layout />
                 </ProtectedRoute>
               }>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/profile" element={<Profile />} />

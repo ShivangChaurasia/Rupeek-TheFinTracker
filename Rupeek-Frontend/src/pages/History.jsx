@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { format, subMonths, startOfMonth, endOfMonth, isSameMonth } from 'date-fns';
-import { Calendar as CalendarIcon, ArrowDownLeft, ArrowUpRight, Search } from 'lucide-react';
+import { Calendar as CalendarIcon, ArrowDownLeft, ArrowUpRight, Search, Download } from 'lucide-react';
+import Button from '../components/Button';
 import Input from '../components/Input';
 
 export default function History() {
@@ -40,6 +41,32 @@ export default function History() {
         );
     }
 
+    const handleExport = () => {
+        const headers = ['Date', 'Type', 'Category', 'Amount', 'Note'];
+        const csvContent = [
+            headers.join(','),
+            ...filteredTransactions.map(t => [
+                format(t.date, 'yyyy-MM-dd'),
+                t.type,
+                t.category,
+                t.amount,
+                `"${t.note || ''}"`
+            ].join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `transactions_${selectedMonth}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
     return (
         <div className="p-4 md:p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -51,6 +78,10 @@ export default function History() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <Button variant="outline" onClick={handleExport} className="gap-2">
+                        <Download className="w-4 h-4" />
+                        <span className="hidden sm:inline">Export</span>
+                    </Button>
                     <div className="relative">
                         <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                         <input
@@ -111,8 +142,8 @@ export default function History() {
                             <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
                                 <div className="flex items-center gap-4">
                                     <div className={`p-2 rounded-full ${transaction.type === 'income'
-                                            ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
-                                            : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                                        ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
+                                        : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
                                         }`}>
                                         {transaction.type === 'income' ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                                     </div>
@@ -124,8 +155,8 @@ export default function History() {
                                     </div>
                                 </div>
                                 <div className={`font-semibold ${transaction.type === 'income'
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-red-600 dark:text-red-400'
+                                    ? 'text-green-600 dark:text-green-400'
+                                    : 'text-red-600 dark:text-red-400'
                                     }`}>
                                     {transaction.type === 'income' ? '+' : '-'}₹{parseFloat(transaction.amount).toLocaleString()}
                                 </div>

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { Wallet, CheckCircle2 } from 'lucide-react';
 
 export default function Onboarding() {
-    const { currentUser } = useAuth();
+    const { currentUser, userProfile } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1);
@@ -16,7 +16,14 @@ export default function Onboarding() {
         name: '',
         monthlyIncome: '',
         currency: '₹',
+        salaryDate: 1
     });
+
+    useEffect(() => {
+        if (userProfile?.name) {
+            setFormData(prev => ({ ...prev, name: userProfile.name }));
+        }
+    }, [userProfile]);
 
     const currencies = [
         { label: 'INR (₹)', value: '₹' },
@@ -38,10 +45,21 @@ export default function Onboarding() {
                 email: currentUser.email,
                 monthlyIncome: parseFloat(formData.monthlyIncome),
                 currency: formData.currency,
+                salaryDate: formData.salaryDate || 1,
                 isOnboarded: true,
                 createdAt: serverTimestamp(),
                 photoURL: currentUser.photoURL || '',
                 provider: currentUser.providerData[0]?.providerId || 'email',
+            });
+
+            // Add initial salary transaction
+            await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), {
+                type: 'income',
+                amount: parseFloat(formData.monthlyIncome),
+                category: 'Salary',
+                date: new Date(),
+                note: 'Initial Salary from Onboarding',
+                createdAt: serverTimestamp()
             });
 
             navigate('/');
@@ -66,7 +84,7 @@ export default function Onboarding() {
                 </div>
 
                 <div className="flex justify-center gap-2 mb-8">
-                    {[1, 2, 3].map((i) => (
+                    {[1, 2, 3, 4].map((i) => (
                         <div
                             key={i}
                             className={`h-2 flex-1 rounded-full transition-colors ${step >= i ? 'bg-primary' : 'bg-muted'
@@ -131,6 +149,36 @@ export default function Onboarding() {
                     {step === 3 && (
                         <div className="space-y-4 animate-in fade-in slide-in-from-right-8">
                             <div className="space-y-2">
+                                <label className="text-sm font-medium">When do you receive your salary?</label>
+                                <div className="space-y-1">
+                                    <Input
+                                        required
+                                        type="number"
+                                        min="1"
+                                        max="31"
+                                        value={formData.salaryDate}
+                                        onChange={(e) => setFormData({ ...formData, salaryDate: parseInt(e.target.value) })}
+                                        placeholder="1"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        We'll use this date to start your monthly budget cycle.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-3">
+                                <Button type="button" variant="outline" onClick={() => setStep(2)} className="flex-1">
+                                    Back
+                                </Button>
+                                <Button type="button" onClick={() => setStep(4)} className="flex-1">
+                                    Continue
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 4 && (
+                        <div className="space-y-4 animate-in fade-in slide-in-from-right-8">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium">What is your monthly income?</label>
                                 <div className="relative">
                                     <span className="absolute left-3 top-2.5 text-muted-foreground">
@@ -151,7 +199,7 @@ export default function Onboarding() {
                                 </p>
                             </div>
                             <div className="flex gap-3">
-                                <Button type="button" variant="outline" onClick={() => setStep(2)} className="flex-1">
+                                <Button type="button" variant="outline" onClick={() => setStep(3)} className="flex-1">
                                     Back
                                 </Button>
                                 <Button type="submit" disabled={loading || !formData.monthlyIncome} className="flex-1">

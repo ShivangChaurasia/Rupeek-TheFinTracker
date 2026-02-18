@@ -12,7 +12,8 @@ export default function Profile() {
         name: '',
         email: '',
         monthlyIncome: '',
-        currency: '₹'
+        currency: '₹',
+        salaryDate: 1
     });
     const [loading, setLoading] = useState(false);
     const [initialLoading, setInitialLoading] = useState(true);
@@ -30,7 +31,8 @@ export default function Profile() {
                         name: data.name || '',
                         email: currentUser.email || '',
                         monthlyIncome: data.monthlyIncome || '',
-                        currency: data.currency || '₹'
+                        currency: data.currency || '₹',
+                        salaryDate: data.salaryDate || 1
                     });
                 }
             } catch (error) {
@@ -51,7 +53,8 @@ export default function Profile() {
             await updateDoc(docRef, {
                 name: profile.name,
                 monthlyIncome: profile.monthlyIncome,
-                currency: profile.currency
+                currency: profile.currency,
+                salaryDate: profile.salaryDate || 1
             });
             setSuccessMessage('Profile updated successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
@@ -151,6 +154,24 @@ export default function Profile() {
                                     <option value="£">GBP (£)</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div className="grid gap-2">
+                            <label className="text-sm font-medium flex items-center gap-2">
+                                <Wallet className="w-4 h-4 text-muted-foreground" />
+                                Salary Cycle Start Date
+                            </label>
+                            <Input
+                                type="number"
+                                min="1"
+                                max="31"
+                                value={profile.salaryDate}
+                                onChange={(e) => setProfile({ ...profile, salaryDate: parseInt(e.target.value) })}
+                                placeholder="1"
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                Your monthly budget will reset on this day.
+                            </p>
                         </div>
                     </div>
 
