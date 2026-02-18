@@ -31,7 +31,7 @@ export default function Signup() {
         setCountdown((prev) => prev - 1);
       }, 1000);
     } else if (countdown === 0) {
-      navigate('/');
+      navigate('/onboarding');
     }
     return () => clearTimeout(timer);
   }, [countdown, navigate]);
