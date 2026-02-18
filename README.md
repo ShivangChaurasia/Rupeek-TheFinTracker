@@ -4,6 +4,7 @@
 > Experience the future of personal finance with Rupeek. Smart tracking, custom salary cycles, and premium analytics designed for the modern earner.
 
 <img src="./Rupeek-Frontend/src/assets/rupeek.png" width="100" />
+Live Link: https://rupeekfinances.vercel.app 
 
 ## 🌟 Overview
 
