@@ -1,9 +1,9 @@
-# Rupeek - The FinTracker 🚀
-
+# Rupeek - Master Your Finances 🚀
+---
 > **Financial Freedom, Simplified.**
 > Experience the future of personal finance with Rupeek. Smart tracking, custom salary cycles, and premium analytics designed for the modern earner.
 
-![Rupeek Banner](./src/assets/rupeek.png)
+![Rupeek Banner](./Rupeek-Frontend/src/assets/rupeek.png)
 
 ## 🌟 Overview
 
@@ -107,4 +107,4 @@ The project is optimized for deployment on **Vercel**.
 
 ---
 
-© 2024 Rupeek. All rights reserved.
+© 2026 Rupeek. All rights reserved.
