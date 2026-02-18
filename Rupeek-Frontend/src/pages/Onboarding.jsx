@@ -103,7 +103,7 @@ export default function Onboarding() {
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="John Doe"
+                                    placeholder="Enter your full name"
                                     autoFocus
                                 />
                             </div>
