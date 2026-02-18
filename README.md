@@ -3,7 +3,7 @@
 > **Financial Freedom, Simplified.**
 > Experience the future of personal finance with Rupeek. Smart tracking, custom salary cycles, and premium analytics designed for the modern earner.
 
-![Rupeek Banner](./Rupeek-Frontend/src/assets/rupeek.png)
+<img src="./Rupeek-Frontend/src/assets/rupeek.png" width="100" />
 
 ## 🌟 Overview
 
