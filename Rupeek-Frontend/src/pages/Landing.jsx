@@ -33,14 +33,16 @@ export default function Landing() {
                     <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center md:justify-start">
                         <Link to={currentUser ? "/dashboard" : "/signup"}>
                             <Button size="lg" className="h-12 px-8 text-lg gap-2 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all rounded-full">
-                                Start Your Journey <ArrowRight className="w-5 h-5" />
+                                {currentUser ? "Go to Dashboard" : "Start Your Journey"} <ArrowRight className="w-5 h-5" />
                             </Button>
                         </Link>
-                        <Link to="/login">
-                            <Button variant="outline" size="lg" className="h-12 px-8 text-lg rounded-full">
-                                Sign In
-                            </Button>
-                        </Link>
+                        {!currentUser && (
+                            <Link to="/login">
+                                <Button variant="outline" size="lg" className="h-12 px-8 text-lg rounded-full">
+                                    Sign In
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                     <div className="flex items-center gap-6 text-sm font-medium text-muted-foreground pt-4 justify-center md:justify-start">
                         <div className="flex items-center gap-2">
