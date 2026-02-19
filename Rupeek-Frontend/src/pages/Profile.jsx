@@ -30,7 +30,7 @@ export default function Profile() {
     const [passwordSuccess, setPasswordSuccess] = useState('');
     const [passwordLoading, setPasswordLoading] = useState(false);
 
-    const { updateUserPassword, reauthenticate } = useAuth();
+
 
     useEffect(() => {
         if (currentUser) {
@@ -127,8 +127,38 @@ export default function Profile() {
         );
     }
 
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [deleteError, setDeleteError] = useState('');
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const { updateUserPassword, reauthenticate, deleteUserAccount } = useAuth();
+
+    // ... (existing useEffects) ...
+
+    const handleDeleteAccount = async () => {
+        setDeleteError('');
+        setDeleteLoading(true);
+        try {
+            await deleteUserAccount(deletePassword);
+            // AuthContext handles redirect usually via onAuthStateChanged, but we might want to force it or show success
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            setDeleteError("Failed to delete account. Please check your password and try again.");
+            setDeleteLoading(false);
+        }
+    };
+
+    if (initialLoading) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
     return (
-        <div className="p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4">
+        <div className="p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-20">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
                 <p className="text-muted-foreground mt-1">
@@ -136,8 +166,10 @@ export default function Profile() {
                 </p>
             </div>
 
+            {/* Profile Form */}
             <div className="max-w-2xl bg-card rounded-xl border border-border shadow-sm p-6 md:p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* ... (existing profile form fields) ... */}
                     <div className="flex items-center gap-4 pb-6 border-b border-border">
                         <div className="bg-primary/10 p-4 rounded-full">
                             <User className="w-8 h-8 text-primary" />
@@ -318,6 +350,76 @@ export default function Profile() {
                             </Button>
                         </div>
                     </form>
+                )}
+            </div>
+
+            {/* Danger Zone */}
+            <div className="max-w-2xl bg-destructive/5 rounded-xl border border-destructive/20 shadow-sm p-6 md:p-8">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-xl font-semibold text-destructive">Danger Zone</h2>
+                        <p className="text-sm text-destructive/80">
+                            Permanently delete your account and all data
+                        </p>
+                    </div>
+                    {!showDeleteConfirm ? (
+                        <Button
+                            variant="destructive"
+                            onClick={() => setShowDeleteConfirm(true)}
+                        >
+                            Delete Account
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setShowDeleteConfirm(false);
+                                setDeleteError('');
+                                setDeletePassword('');
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    )}
+                </div>
+
+                {showDeleteConfirm && (
+                    <div className="mt-6 space-y-4 animate-in slide-in-from-top-2">
+                        <div className="bg-destructive/10 text-destructive text-sm p-4 rounded-lg border border-destructive/20">
+                            <strong>Warning:</strong> This action is irreversible. All your data including transactions and personal information will be permanently deleted.
+                        </div>
+
+                        {deleteError && (
+                            <div className="bg-destructive text-destructive-foreground text-sm p-3 rounded-lg">
+                                {deleteError}
+                            </div>
+                        )}
+
+                        {!isGoogleUser && (
+                            <div className="grid gap-2">
+                                <label className="text-sm font-medium">
+                                    Confirm with Password
+                                </label>
+                                <Input
+                                    type="password"
+                                    value={deletePassword}
+                                    onChange={(e) => setDeletePassword(e.target.value)}
+                                    placeholder="Enter your current password"
+                                    className="border-destructive/30 focus-visible:ring-destructive/30"
+                                />
+                            </div>
+                        )}
+
+                        <div className="flex justify-end pt-2">
+                            <Button
+                                variant="destructive"
+                                onClick={handleDeleteAccount}
+                                disabled={deleteLoading || (!isGoogleUser && !deletePassword)}
+                            >
+                                {deleteLoading ? 'Deleting Account...' : 'Confirm Deletion'}
+                            </Button>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

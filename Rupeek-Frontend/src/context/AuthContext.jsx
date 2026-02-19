@@ -10,7 +10,7 @@ import {
     reauthenticateWithCredential,
     EmailAuthProvider
 } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import { auth, db, googleProvider } from "../firebase/config";
 
 const AuthContext = createContext();
@@ -80,6 +80,31 @@ export function AuthProvider({ children }) {
         return reauthenticateWithCredential(currentUser, credential);
     }
 
+    async function deleteUserAccount(password) {
+        if (!currentUser) return;
+
+        try {
+            // Re-authenticate user before deletion
+            if (currentUser.providerData.some(p => p.providerId === 'google.com')) {
+                await signInWithPopup(auth, googleProvider);
+            } else if (password) {
+                await reauthenticate(password);
+            } else {
+                throw new Error("Password required for deletion");
+            }
+
+            // Delete user data from Firestore
+            const userDocRef = doc(db, 'users', currentUser.uid);
+            await deleteDoc(userDocRef);
+
+            // Delete user from Firebase Auth
+            await currentUser.delete();
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            throw error;
+        }
+    }
+
     const value = {
         currentUser,
         userProfile,
@@ -88,7 +113,8 @@ export function AuthProvider({ children }) {
         loginWithGoogle,
         logout,
         updateUserPassword,
-        reauthenticate
+        reauthenticate,
+        deleteUserAccount
     };
 
     return (
