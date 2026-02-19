@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import { User, Mail, DollarSign, Wallet } from 'lucide-react';
 
 export default function Profile() {
-    const { currentUser } = useAuth();
+    const { currentUser, updateUserPassword, reauthenticate, deleteUserAccount } = useAuth();
     const [profile, setProfile] = useState({
         name: '',
         email: '',
@@ -132,7 +132,7 @@ export default function Profile() {
     const [deleteError, setDeleteError] = useState('');
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    const { updateUserPassword, reauthenticate, deleteUserAccount } = useAuth();
+
 
     // ... (existing useEffects) ...
 
