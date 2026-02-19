@@ -8,6 +8,17 @@ import { User, Mail, DollarSign, Wallet } from 'lucide-react';
 
 export default function Profile() {
     const { currentUser } = useAuth();
+    const [profile, setProfile] = useState({
+        name: '',
+        email: '',
+        monthlyIncome: '',
+        currency: '₹',
+        salaryDate: 1
+    });
+    const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
+    const [successMessage, setSuccessMessage] = useState('');
+
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
