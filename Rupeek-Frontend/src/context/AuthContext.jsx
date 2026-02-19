@@ -5,7 +5,10 @@ import {
     createUserWithEmailAndPassword,
     signOut,
     signInWithPopup,
-    GoogleAuthProvider
+    GoogleAuthProvider,
+    updatePassword,
+    reauthenticateWithCredential,
+    EmailAuthProvider
 } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db, googleProvider } from "../firebase/config";
@@ -68,13 +71,24 @@ export function AuthProvider({ children }) {
         };
     }, []);
 
+    function updateUserPassword(password) {
+        return updatePassword(currentUser, password);
+    }
+
+    function reauthenticate(password) {
+        const credential = EmailAuthProvider.credential(currentUser.email, password);
+        return reauthenticateWithCredential(currentUser, credential);
+    }
+
     const value = {
         currentUser,
         userProfile,
         signup,
         login,
         loginWithGoogle,
-        logout
+        logout,
+        updateUserPassword,
+        reauthenticate
     };
 
     return (

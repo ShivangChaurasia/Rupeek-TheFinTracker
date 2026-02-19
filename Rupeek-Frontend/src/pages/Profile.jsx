@@ -8,16 +8,27 @@ import { User, Mail, DollarSign, Wallet } from 'lucide-react';
 
 export default function Profile() {
     const { currentUser } = useAuth();
-    const [profile, setProfile] = useState({
-        name: '',
-        email: '',
-        monthlyIncome: '',
-        currency: '₹',
-        salaryDate: 1
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
     });
-    const [loading, setLoading] = useState(false);
-    const [initialLoading, setInitialLoading] = useState(true);
-    const [successMessage, setSuccessMessage] = useState('');
+    const [isGoogleUser, setIsGoogleUser] = useState(false);
+    const [showPasswordSection, setShowPasswordSection] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
+    const [passwordLoading, setPasswordLoading] = useState(false);
+
+    const { updateUserPassword, reauthenticate } = useAuth();
+
+    useEffect(() => {
+        if (currentUser) {
+            const isGoogle = currentUser.providerData.some(
+                (provider) => provider.providerId === 'google.com'
+            );
+            setIsGoogleUser(isGoogle);
+        }
+    }, [currentUser]);
 
     useEffect(() => {
         async function fetchProfile() {
@@ -64,6 +75,39 @@ export default function Profile() {
         setLoading(false);
     };
 
+    const handlePasswordUpdate = async (e) => {
+        e.preventDefault();
+        setPasswordError('');
+        setPasswordSuccess('');
+        setPasswordLoading(true);
+
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setPasswordError("New passwords do not match");
+            setPasswordLoading(false);
+            return;
+        }
+
+        if (passwordData.newPassword.length < 6) {
+            setPasswordError("Password must be at least 6 characters");
+            setPasswordLoading(false);
+            return;
+        }
+
+        try {
+            if (!isGoogleUser) {
+                await reauthenticate(passwordData.currentPassword);
+            }
+            await updateUserPassword(passwordData.newPassword);
+            setPasswordSuccess("Password updated successfully");
+            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            setShowPasswordSection(false);
+        } catch (error) {
+            console.error("Error updating password:", error);
+            setPasswordError("Failed to update password. Please check your current password and try again.");
+        }
+        setPasswordLoading(false);
+    };
+
     if (initialLoading) {
         return (
             <div className="flex items-center justify-center p-8">
@@ -90,6 +134,11 @@ export default function Profile() {
                         <div>
                             <h2 className="text-xl font-semibold">{profile.name || 'User'}</h2>
                             <p className="text-sm text-muted-foreground">{profile.email}</p>
+                            {isGoogleUser && (
+                                <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mt-1">
+                                    Google Account
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -181,6 +230,84 @@ export default function Profile() {
                         </Button>
                     </div>
                 </form>
+            </div>
+
+            {/* Password Management Section */}
+            <div className="max-w-2xl bg-card rounded-xl border border-border shadow-sm p-6 md:p-8">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-xl font-semibold">Password & Security</h2>
+                        <p className="text-sm text-muted-foreground">
+                            {isGoogleUser
+                                ? "Set a password to login with email/password"
+                                : "Update your account password"}
+                        </p>
+                    </div>
+                    <Button
+                        variant="outline"
+                        onClick={() => setShowPasswordSection(!showPasswordSection)}
+                    >
+                        {showPasswordSection ? 'Cancel' : (isGoogleUser ? 'Set Password' : 'Change Password')}
+                    </Button>
+                </div>
+
+                {showPasswordSection && (
+                    <form onSubmit={handlePasswordUpdate} className="mt-6 space-y-4 animate-in slide-in-from-top-2">
+                        {passwordError && (
+                            <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-lg">
+                                {passwordError}
+                            </div>
+                        )}
+                        {passwordSuccess && (
+                            <div className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 p-3 rounded-lg text-sm">
+                                {passwordSuccess}
+                            </div>
+                        )}
+
+                        {!isGoogleUser && (
+                            <div className="grid gap-2">
+                                <label className="text-sm font-medium">Current Password</label>
+                                <Input
+                                    type="password"
+                                    value={passwordData.currentPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                                    required
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                        )}
+
+                        <div className="grid gap-2">
+                            <label className="text-sm font-medium">New Password</label>
+                            <Input
+                                type="password"
+                                value={passwordData.newPassword}
+                                onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                required
+                                minLength={6}
+                                placeholder="••••••••"
+                            />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <label className="text-sm font-medium">Confirm New Password</label>
+                            <Input
+                                type="password"
+                                value={passwordData.confirmPassword}
+                                onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                required
+                                minLength={6}
+                                placeholder="••••••••"
+                            />
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                            <Button type="submit" disabled={passwordLoading}>
+                                {passwordLoading ? 'Updating...' : 'Update Password'}
+                            </Button>
+                        </div>
+                    </form>
+                )}
             </div>
         </div>
     );
