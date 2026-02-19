@@ -20,17 +20,25 @@ Live Link: https://rupeekfinances.vercel.app
 ### 📊 **Interactive Dashboard**
 -   **Real-time Overview**: Instant view of Current Balance, Total Income, and Expenses.
 -   **Visual Charts**: Dynamic bar and pie charts using **Recharts** to visualize spending habits.
+-   **Daily Trends**: Track your daily spending patterns with interactive bar charts.
 -   **Recent Transactions**: Quick access to your latest financial activities.
 
 ### 📝 **Smart Transaction Management**
 -   **Easy Entry**: Intuitive modal for adding Income or Expenses.
+-   **Flexible Management**: Edit or delete transactions effortlessly to keep your records accurate.
 -   **Categorization**: Organize transactions by standard categories (Food, Rent, Salary, Freelance, etc.).
 -   **Transaction History**: Complete log of all financial movements with search and filter capabilities.
 -   **Data Export**: Export your financial history to **CSV** for external analysis.
 
 ### 📈 **Detailed Analytics**
 -   **Expense Breakdown**: Deep dive into where your money goes with category-wise pie charts.
+-   **Daily Trends**: Visualize your spending habits over the month with daily bar charts.
 -   **Income Analysis**: Understand your revenue streams better.
+
+### 👤 **Account Management**
+-   **Profile Control**: easy-to-use profile section.
+-   **Security**: Change your password securely.
+-   **Data Control**: Delete your account and data if needed.
 
 ### 🎨 **Premium UI/UX**
 -   **Modern Design**: Built with **Tailwind CSS** using a custom "Outfit" font family.
