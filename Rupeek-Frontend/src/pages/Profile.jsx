@@ -30,6 +30,11 @@ export default function Profile() {
     const [passwordSuccess, setPasswordSuccess] = useState('');
     const [passwordLoading, setPasswordLoading] = useState(false);
 
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [deleteError, setDeleteError] = useState('');
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
 
 
     useEffect(() => {
@@ -127,10 +132,7 @@ export default function Profile() {
         );
     }
 
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [deletePassword, setDeletePassword] = useState('');
-    const [deleteError, setDeleteError] = useState('');
-    const [deleteLoading, setDeleteLoading] = useState(false);
+
 
 
 
