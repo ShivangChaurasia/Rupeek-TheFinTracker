@@ -136,14 +136,12 @@ export default function Profile() {
 
 
 
-    // ... (existing useEffects) ...
 
     const handleDeleteAccount = async () => {
         setDeleteError('');
         setDeleteLoading(true);
         try {
             await deleteUserAccount(deletePassword);
-            // AuthContext handles redirect usually via onAuthStateChanged, but we might want to force it or show success
         } catch (error) {
             console.error("Error deleting account:", error);
             setDeleteError("Failed to delete account. Please check your password and try again.");
@@ -168,10 +166,8 @@ export default function Profile() {
                 </p>
             </div>
 
-            {/* Profile Form */}
             <div className="max-w-2xl bg-card rounded-xl border border-border shadow-sm p-6 md:p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* ... (existing profile form fields) ... */}
                     <div className="flex items-center gap-4 pb-6 border-b border-border">
                         <div className="bg-primary/10 p-4 rounded-full">
                             <User className="w-8 h-8 text-primary" />
@@ -277,7 +273,6 @@ export default function Profile() {
                 </form>
             </div>
 
-            {/* Password Management Section */}
             <div className="max-w-2xl bg-card rounded-xl border border-border shadow-sm p-6 md:p-8">
                 <div className="flex items-center justify-between">
                     <div>
@@ -355,7 +350,6 @@ export default function Profile() {
                 )}
             </div>
 
-            {/* Danger Zone */}
             <div className="max-w-2xl bg-destructive/5 rounded-xl border border-destructive/20 shadow-sm p-6 md:p-8">
                 <div className="flex items-center justify-between">
                     <div>

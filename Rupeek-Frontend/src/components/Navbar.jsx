@@ -46,13 +46,11 @@ export default function Navbar() {
   return (
     <header className="border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-50 supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <img src={rupeekLogo} alt="Rupeek Logo" className="w-8 h-8 object-contain" />
           <LogoText className="text-xl" />
         </Link>
 
-        {/* Desktop Navigation (Only if Logged In) */}
         {currentUser && (
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
@@ -74,9 +72,7 @@ export default function Navbar() {
           </nav>
         )}
 
-        {/* Right Side Actions */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Greeting (Only if Logged In) */}
           {currentUser && userProfile?.name && (
             <span className="text-sm font-medium text-muted-foreground">
               Welcome, <span className="text-foreground">{userProfile.name}</span>
@@ -114,7 +110,6 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden p-2 text-muted-foreground hover:text-foreground"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -123,7 +118,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-card p-4 space-y-4 animate-in slide-in-from-top-5">
           {currentUser && (

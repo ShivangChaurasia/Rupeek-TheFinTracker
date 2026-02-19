@@ -17,26 +17,13 @@ export default function SalaryPrompt() {
     useEffect(() => {
         if (!userProfile || !transactions) return;
 
-        // Check if we have a salary transaction for the current cycle
-        // useTransactions already filters transactions for the current cycle!
-        // So we just check if any "income" transaction exists in the list?
-        // Or specifically "salary"?
 
-        // User said: "ask user to tell them what is the earning of the month"
-        // Let's assume if NO income transaction exists for this cycle, we prompt.
-        // OR better: check for specific 'Salary' category to be less annoying if they added 'Gift'.
 
         const hasSalary = transactions.some(t => t.type === 'income' && t.category === 'Salary');
 
         if (!hasSalary) {
-            // Check if today is past the salary date
-            // Actually transactions are empty if new cycle started and no txn added.
-            // But we need to make sure we don't prompt every time if they just haven't added it yet but don't want to.
-            // Maybe check if we have already prompted? (Local storage? Or just rely on existence of txn?)
-            // For now, prompt if missing.
             setIsOpen(true);
 
-            // Pre-fill with profile income
             if (userProfile.monthlyIncome) {
                 setAmount(userProfile.monthlyIncome.toString());
             }
@@ -49,7 +36,6 @@ export default function SalaryPrompt() {
         if (!amount || !currentUser) return;
         setLoading(true);
         try {
-            // 1. Add Transaction
             await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), {
                 type: 'income',
                 amount: parseFloat(amount),
@@ -59,7 +45,6 @@ export default function SalaryPrompt() {
                 createdAt: serverTimestamp()
             });
 
-            // 2. Update Profile Monthly Income (in case it changed)
             if (parseFloat(amount) !== parseFloat(userProfile.monthlyIncome)) {
                 await updateDoc(doc(db, 'users', currentUser.uid), {
                     monthlyIncome: parseFloat(amount)

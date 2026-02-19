@@ -13,7 +13,6 @@ export const useLogin = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setIsPending(false);
-      // AuthContext will automatically detect the login and redirect
     } catch (err) {
       console.log(err.message);
       setError(err.message);

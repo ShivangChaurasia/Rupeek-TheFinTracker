@@ -42,8 +42,6 @@ export default function Onboarding() {
 
             await setDoc(userRef, {
                 name: formData.name,
-                // email is already in auth, but keeping it in doc is fine
-                // created at is already set in signup, we might want to keep it or just merge
                 monthlyIncome: parseFloat(formData.monthlyIncome),
                 currency: formData.currency,
                 salaryDate: formData.salaryDate || 1,
@@ -53,7 +51,6 @@ export default function Onboarding() {
                 updatedAt: serverTimestamp()
             }, { merge: true });
 
-            // Add initial salary transaction
             await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), {
                 type: 'income',
                 amount: parseFloat(formData.monthlyIncome),

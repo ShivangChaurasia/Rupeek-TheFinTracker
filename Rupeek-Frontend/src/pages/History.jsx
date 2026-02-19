@@ -7,10 +7,8 @@ import Input from '../components/Input';
 
 export default function History() {
     const { transactions, loading } = useTransactions();
-    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
-    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); const [searchTerm, setSearchTerm] = useState('');
 
-    // Filter transactions by selected month and search term
     const filteredTransactions = useMemo(() => {
         return transactions.filter(t => {
             const matchesMonth = isSameMonth(new Date(t.date), new Date(selectedMonth));
@@ -20,7 +18,6 @@ export default function History() {
         });
     }, [transactions, selectedMonth, searchTerm]);
 
-    // Calculate monthly stats
     const stats = useMemo(() => {
         return filteredTransactions.reduce((acc, curr) => {
             const amount = parseFloat(curr.amount);

@@ -1,6 +1,5 @@
 import { useReducer, useState, useEffect } from "react";
 import { db } from "../firebase/config";
-// 1. ADDED IMPORTS (deleteDoc, doc)
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
 
 let initialState = {
@@ -16,7 +15,6 @@ const firestoreReducer = (state, action) => {
       return { isPending: true, document: null, success: false, error: null };
     case "ADDED_DOCUMENT":
       return { isPending: false, document: action.payload, success: true, error: null };
-    // 2. ADDED REDUCER CASE FOR DELETE
     case "DELETED_DOCUMENT":
       return { isPending: false, document: null, success: true, error: null };
     case "ERROR":
@@ -30,14 +28,13 @@ export const useFirestore = (collectionName) => {
   const [response, dispatch] = useReducer(firestoreReducer, initialState);
   const [isCancelled, setIsCancelled] = useState(false);
 
-  // function to add a document
   const addDocument = async (doc) => {
     dispatch({ type: "IS_PENDING" });
 
     try {
       const createdAt = serverTimestamp();
       const addedDocument = await addDoc(collection(db, collectionName), { ...doc, createdAt });
-      
+
       if (!isCancelled) {
         dispatch({ type: "ADDED_DOCUMENT", payload: addedDocument });
       }
@@ -48,14 +45,12 @@ export const useFirestore = (collectionName) => {
     }
   };
 
-  // 3. MOVED FUNCTION INSIDE THE HOOK
   const deleteDocument = async (id) => {
     dispatch({ type: "IS_PENDING" });
 
     try {
-      // 4. Correctly referencing the DB and Collection Name
       await deleteDoc(doc(db, collectionName, id));
-      
+
       if (!isCancelled) {
         dispatch({ type: "DELETED_DOCUMENT" });
       }
@@ -71,6 +66,5 @@ export const useFirestore = (collectionName) => {
     return () => setIsCancelled(true);
   }, []);
 
-  // 5. EXPORT THE DELETE FUNCTION
   return { addDocument, deleteDocument, response };
 };

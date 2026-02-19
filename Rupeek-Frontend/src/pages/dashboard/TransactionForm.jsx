@@ -4,8 +4,7 @@ import { useFirestore } from '../../hooks/useFirestore';
 export default function TransactionForm({ uid, onSuccess }) {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('General'); // Default category
-
+  const [category, setCategory] = useState('General');
   const { addDocument, response } = useFirestore('transactions');
 
   const categories = ['General', 'Food', 'Rent', 'Shopping', 'Entertainment', 'Transport', 'Health'];
@@ -13,17 +12,16 @@ export default function TransactionForm({ uid, onSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     addDocument({
-      uid, 
-      name, 
+      uid,
+      name,
       amount,
-      category, // Save the category to Firestore
-      date: new Date().toISOString().split('T')[0]
+      category, date: new Date().toISOString().split('T')[0]
     });
   };
 
   useEffect(() => {
     if (response.success) {
-      onSuccess(); 
+      onSuccess();
     }
   }, [response.success, onSuccess]);
 
@@ -31,32 +29,29 @@ export default function TransactionForm({ uid, onSuccess }) {
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
       <h3 className="text-xl font-bold text-gray-800 mb-6">Add Transaction</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Transaction Name */}
         <label className="block">
           <span className="text-sm font-semibold text-gray-600">Transaction Name</span>
-          <input 
+          <input
             type="text" required
-            onChange={(e) => setName(e.target.value)} 
+            onChange={(e) => setName(e.target.value)}
             value={name}
             className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 p-2 focus:ring-green-500 focus:border-green-500"
           />
         </label>
 
-        {/* Amount */}
         <label className="block">
           <span className="text-sm font-semibold text-gray-600">Amount ($)</span>
-          <input 
+          <input
             type="number" required
-            onChange={(e) => setAmount(e.target.value)} 
+            onChange={(e) => setAmount(e.target.value)}
             value={amount}
             className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 p-2"
           />
         </label>
 
-        {/* Category Dropdown */}
         <label className="block">
           <span className="text-sm font-semibold text-gray-600">Category</span>
-          <select 
+          <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 p-2"

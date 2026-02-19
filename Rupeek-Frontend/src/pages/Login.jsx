@@ -17,8 +17,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [countdown, setCountdown] = useState(null); // null means not started
-
+  const [countdown, setCountdown] = useState(null);
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
@@ -43,14 +42,12 @@ export default function Login() {
       const userCredential = await login(email, password);
       const user = userCredential.user;
 
-      // Check if user is onboarded
       const checkOnboardingAndRedirect = async (uid) => {
         try {
-          // Trigger success animation and countdown
           handleSuccess();
         } catch (err) {
           console.error("Error checking onboarding:", err);
-          handleSuccess(); // Fallback
+          handleSuccess();
         }
       };
 
@@ -64,7 +61,7 @@ export default function Login() {
 
   const handleSuccess = () => {
     setShowSuccess(true);
-    setCountdown(5); // Start 5 second countdown
+    setCountdown(5);
   };
 
   if (showSuccess) {
@@ -88,7 +85,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left Side - Illustration/Brand */}
       <div className="hidden lg:flex lg:w-1/2 bg-muted/30 relative items-center justify-center p-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-orange-400/20" />
         <div className="relative z-10 max-w-lg space-y-8">
@@ -105,9 +101,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Side - Form */}
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 relative">
-        {/* Background decoration for form side */}
         <div className="absolute inset-0 bg-background/50 backdrop-blur-sm -z-10" />
 
         <div className="mx-auto w-full max-w-lg lg:w-[34rem] space-y-10 bg-card/80 backdrop-blur-md px-12 py-16 rounded-3xl shadow-2xl border border-border/50">

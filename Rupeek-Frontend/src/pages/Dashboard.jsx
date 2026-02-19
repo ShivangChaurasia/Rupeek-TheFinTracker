@@ -9,12 +9,10 @@ import { format } from 'date-fns';
 import SalaryPrompt from '../components/SalaryPrompt';
 
 export default function Dashboard() {
-  const { currentUser, userProfile } = useAuth(); // We might need user preferences like currency later
-  const { transactions, totalBalance, loading } = useTransactions();
+  const { currentUser, userProfile } = useAuth(); const { transactions, totalBalance, loading } = useTransactions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addTransaction } = useTransactions();
 
-  // Calculate totals
   const summary = transactions.reduce((acc, curr) => {
     const amount = parseFloat(curr.amount);
     if (curr.type === 'income') {
@@ -54,7 +52,6 @@ export default function Dashboard() {
         </Button>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <div className="bg-card p-6 rounded-xl border border-border shadow-sm transition-all hover:shadow-md">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -102,7 +99,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Budget Overview */}
       {userProfile?.monthlyIncome && (
         <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
           <div className="flex items-center justify-between mb-4">
@@ -135,7 +131,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Recent Transactions */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold tracking-tight">Recent Transactions</h2>
         <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">

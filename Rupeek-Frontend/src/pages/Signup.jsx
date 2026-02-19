@@ -49,12 +49,11 @@ export default function Signup() {
       const userCredential = await signup(email, password);
       const user = userCredential.user;
 
-      // Create user document
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         name: name,
         createdAt: serverTimestamp(),
-        isOnboarded: false // Flag to track if user has completed onboarding
+        isOnboarded: false
       });
 
       handleSuccess();
@@ -91,7 +90,6 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Right Side - Illustration/Brand (Swapped for variety) */}
       <div className="hidden lg:flex lg:w-1/2 bg-muted/30 relative items-center justify-center p-12 overflow-hidden order-last">
         <div className="absolute inset-0 bg-gradient-to-bl from-orange-400/20 to-blue-600/20" />
         <div className="relative z-10 max-w-lg space-y-8 text-right">
@@ -116,9 +114,7 @@ export default function Signup() {
         </div>
       </div>
 
-      {/* Left Side - Form */}
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 relative">
-        {/* Background decoration for form side using gradient from index.css essentially */}
 
         <div className="mx-auto w-full max-w-lg lg:w-[34rem] space-y-10 bg-card/80 backdrop-blur-md px-12 py-16 rounded-3xl shadow-2xl border border-border/50">
           <div className="text-center lg:text-left">
@@ -202,8 +198,7 @@ export default function Signup() {
                   try {
                     setError('');
                     setLoading(true);
-                    await signupWithGoogle(); // Assuming signupWithGoogle maps to loginWithGoogle in AuthContext, or I should just use loginWithGoogle
-                    handleSuccess();
+                    await signupWithGoogle(); handleSuccess();
                   } catch (err) {
                     setError('Failed to sign up with Google: ' + err.message);
                     setLoading(false);

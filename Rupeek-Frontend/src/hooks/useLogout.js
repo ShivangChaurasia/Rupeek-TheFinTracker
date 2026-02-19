@@ -13,7 +13,6 @@ export const useLogout = () => {
     try {
       await signOut(auth);
       setIsPending(false);
-      // AuthContext will automatically detect logout and redirect to Login
     } catch (err) {
       console.log(err.message);
       setError(err.message);

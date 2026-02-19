@@ -3,7 +3,6 @@ import { useFirestore } from '../../hooks/useFirestore';
 export default function TransactionList({ transactions }) {
   const { deleteDocument } = useFirestore('transactions');
 
-  // Helper function for category colors
   const getCategoryColor = (cat) => {
     const colors = {
       Food: 'bg-orange-100 text-orange-700',
@@ -25,10 +24,10 @@ export default function TransactionList({ transactions }) {
               {transaction.category}
             </span>
           </div>
-          
+
           <div className="flex items-center gap-6">
             <span className="text-xl font-extrabold text-gray-900">${Number(transaction.amount).toFixed(2)}</span>
-            <button 
+            <button
               onClick={() => deleteDocument(transaction.id)}
               className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all text-xl"
             >

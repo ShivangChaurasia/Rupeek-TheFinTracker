@@ -47,7 +47,6 @@ export function AuthProvider({ children }) {
             setCurrentUser(user);
 
             if (user) {
-                // Subscribe to user profile
                 profileUnsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
                     if (doc.exists()) {
                         setUserProfile(doc.data());
@@ -84,7 +83,6 @@ export function AuthProvider({ children }) {
         if (!currentUser) return;
 
         try {
-            // Re-authenticate user before deletion
             if (currentUser.providerData.some(p => p.providerId === 'google.com')) {
                 await signInWithPopup(auth, googleProvider);
             } else if (password) {
@@ -93,11 +91,9 @@ export function AuthProvider({ children }) {
                 throw new Error("Password required for deletion");
             }
 
-            // Delete user data from Firestore
             const userDocRef = doc(db, 'users', currentUser.uid);
             await deleteDoc(userDocRef);
 
-            // Delete user from Firebase Auth
             await currentUser.delete();
         } catch (error) {
             console.error("Error deleting account:", error);

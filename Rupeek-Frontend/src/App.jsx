@@ -21,12 +21,10 @@ function App() {
         <AuthProvider>
           <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <Routes>
-              {/* Public Routes */}
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
 
-              {/* Protected Routes with Layout */}
               <Route element={
                 <ProtectedRoute>
                   <Layout />
@@ -38,14 +36,12 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
               </Route>
 
-              {/* Onboarding might need to be outside Layout or inside, usually outside if it's a specific flow */}
               <Route path="/onboarding" element={
                 <ProtectedRoute>
                   <Onboarding />
                 </ProtectedRoute>
               } />
 
-              {/* Redirect unknown routes to home */}
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </div>

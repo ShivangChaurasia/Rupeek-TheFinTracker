@@ -8,7 +8,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LogoText from '../components/LogoText';
 
-// Import Lottie JSONs
 import financeAnim from '../Lottie/Finance.json';
 import revenueAnim from '../Lottie/Revenue.json';
 import analysisAnim from '../Lottie/analysis.json';
@@ -20,7 +19,6 @@ export default function Landing() {
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <Navbar />
 
-            {/* Hero Section */}
             <section className="container mx-auto px-4 py-16 md:py-32 flex flex-col md:flex-row items-center gap-12 text-center md:text-left">
                 <div className="flex-1 space-y-8 animate-in slide-in-from-left-8 duration-700">
                     <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
@@ -59,9 +57,7 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* Features Section */}
             <section className="bg-muted/40 py-24 relative overflow-hidden">
-                {/* Decorative elements */}
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
                 <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
@@ -139,7 +135,6 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* Footer */}
             <Footer />
         </div>
     );

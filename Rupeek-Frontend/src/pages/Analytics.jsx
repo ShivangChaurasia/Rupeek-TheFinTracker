@@ -20,7 +20,6 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 export default function Analytics() {
     const { transactions, loading } = useTransactions();
 
-    // Category Breakdown Logic
     const categoryData = useMemo(() => {
         const expenses = transactions.filter(t => t.type === 'expense');
         const categories = expenses.reduce((acc, curr) => {
@@ -32,7 +31,6 @@ export default function Analytics() {
         return Object.entries(categories).map(([name, value]) => ({ name, value }));
     }, [transactions]);
 
-    // Monthly Trend Logic (Daily spending for current month)
     const trendData = useMemo(() => {
         const start = startOfMonth(new Date());
         const end = endOfMonth(new Date());
@@ -47,7 +45,7 @@ export default function Analytics() {
                 date: format(day, 'dd MMM'),
                 amount: total
             };
-        }).filter(d => d.amount > 0 || true); // Keep all days for better chart view or filter? Let's keep all for scale.
+        }).filter(d => d.amount > 0 || true);
     }, [transactions]);
 
     if (loading) {
@@ -68,7 +66,6 @@ export default function Analytics() {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2">
-                {/* Category Chart */}
                 <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
                     <h3 className="text-lg font-semibold mb-6">Expense by Category</h3>
                     <div className="h-[300px] w-full">
@@ -103,7 +100,6 @@ export default function Analytics() {
                     </div>
                 </div>
 
-                {/* Trend Chart */}
                 <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
                     <h3 className="text-lg font-semibold mb-6">Daily Spending Trend</h3>
                     <div className="h-[300px] w-full">

@@ -21,7 +21,6 @@ export function useTransactions() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch total balance (All time)
     useEffect(() => {
         if (!currentUser) return;
 
@@ -33,15 +32,7 @@ export function useTransactions() {
                     totalExpense: sum('amount', where('type', '==', 'expense'))
                 });
 
-                // Firestore sum aggregation is tricky with 'where' inside sum() which is not supported directly like that
-                // actually fetching all docs is safer for client constraint or separate queries
 
-                // Correction: getAggregateFromServer supports sum() but filtering is done on the query level.
-                // We need 2 queries or one query with all transactions.
-                // Attempting simpler approach: fetch all transactions for balance 
-                // OR two aggregations.
-
-                // Let's use two separate aggregations for now for accuracy
                 const incomeQuery = query(coll, where('type', '==', 'income'));
                 const expenseQuery = query(coll, where('type', '==', 'expense'));
 
@@ -54,12 +45,11 @@ export function useTransactions() {
                 setTotalBalance(income - expense);
             } catch (err) {
                 console.error("Error fetching balance:", err);
-                setError(err); // So the UI knows something is wrong
+                setError(err);
             }
         }
 
         fetchBalance();
-        // Set up an interval or refresh trigger if needed, but for now simple fetch on mount/user change
     }, [currentUser, transactions]);
 
     useEffect(() => {
@@ -69,7 +59,6 @@ export function useTransactions() {
             return;
         }
 
-        // Calculate Start and End Date based on Salary Cycle
         const now = new Date();
         const salaryDate = userProfile?.salaryDate || 1;
         let start, end;
@@ -79,14 +68,10 @@ export function useTransactions() {
             end = endOfMonth(now);
         } else {
             if (now.getDate() >= salaryDate) {
-                // Current cycle started this month
                 start = new Date(now.getFullYear(), now.getMonth(), salaryDate);
-                // Ends next month
                 end = new Date(now.getFullYear(), now.getMonth() + 1, salaryDate - 1, 23, 59, 59);
             } else {
-                // Current cycle started last month
                 start = new Date(now.getFullYear(), now.getMonth() - 1, salaryDate);
-                // Ends this month
                 end = new Date(now.getFullYear(), now.getMonth(), salaryDate - 1, 23, 59, 59);
             }
         }
@@ -102,7 +87,6 @@ export function useTransactions() {
             const data = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-                // Handle Firestore Timestamp to JS Date conversion
                 date: doc.data().date?.toDate ? doc.data().date.toDate() : new Date(doc.data().date)
             }));
             setTransactions(data);
@@ -123,8 +107,7 @@ export function useTransactions() {
             await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), {
                 ...transaction,
                 amount: parseFloat(transaction.amount),
-                date: new Date(transaction.date), // Ensure Date object
-                createdAt: serverTimestamp()
+                date: new Date(transaction.date), createdAt: serverTimestamp()
             });
         } catch (err) {
             console.error("Error adding transaction:", err);
