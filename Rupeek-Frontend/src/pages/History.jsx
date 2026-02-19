@@ -1,13 +1,26 @@
 import React, { useState, useMemo } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { format, subMonths, startOfMonth, endOfMonth, isSameMonth } from 'date-fns';
-import { Calendar as CalendarIcon, ArrowDownLeft, ArrowUpRight, Search, Download } from 'lucide-react';
+import { Calendar as CalendarIcon, ArrowDownLeft, ArrowUpRight, Search, Download, Pencil, Trash2 } from 'lucide-react';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import AddTransactionModal from '../components/AddTransactionModal';
 
 export default function History() {
-    const { transactions, loading } = useTransactions();
+    const { transactions, loading, deleteTransaction, updateTransaction, addTransaction } = useTransactions();
     const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTransaction, setEditingTransaction] = useState(null);
+
+    const handleEdit = (transaction) => {
+        setEditingTransaction(transaction);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEditingTransaction(null);
+    };
 
     const filteredTransactions = useMemo(() => {
         return transactions.filter(t => {
@@ -157,11 +170,38 @@ export default function History() {
                                     }`}>
                                     {transaction.type === 'income' ? '+' : '-'}₹{parseFloat(transaction.amount).toLocaleString()}
                                 </div>
+                                <div className="flex items-center gap-2 ml-4">
+                                    <button
+                                        onClick={() => handleEdit(transaction)}
+                                        className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+                                        title="Edit"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (window.confirm('Are you sure you want to delete this transaction?')) {
+                                                deleteTransaction(transaction.id);
+                                            }
+                                        }}
+                                        className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
+                                        title="Delete"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+            <AddTransactionModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onAdd={addTransaction}
+                onUpdate={updateTransaction}
+                initialData={editingTransaction}
+            />
         </div>
     );
 }

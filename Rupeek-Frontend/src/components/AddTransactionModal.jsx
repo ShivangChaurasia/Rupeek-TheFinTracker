@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import Button from './Button';
 import Input from './Input';
 
-export default function AddTransactionModal({ isOpen, onClose, onAdd }) {
+export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, initialData }) {
     const [formData, setFormData] = useState({
         type: 'expense',
         amount: '',
@@ -13,14 +13,18 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd }) {
     });
     const [loading, setLoading] = useState(false);
 
-    if (!isOpen) return null;
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            await onAdd(formData);
-            onClose();
+    React.useEffect(() => {
+        if (initialData) {
+            setFormData({
+                type: initialData.type,
+                amount: initialData.amount,
+                category: initialData.category,
+                note: initialData.note || '',
+                date: initialData.date instanceof Date
+                    ? initialData.date.toISOString().split('T')[0]
+                    : new Date(initialData.date).toISOString().split('T')[0]
+            });
+        } else {
             setFormData({
                 type: 'expense',
                 amount: '',
@@ -28,6 +32,21 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd }) {
                 note: '',
                 date: new Date().toISOString().split('T')[0]
             });
+        }
+    }, [initialData, isOpen]);
+
+    if (!isOpen) return null;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            if (initialData) {
+                await onUpdate(initialData.id, formData);
+            } else {
+                await onAdd(formData);
+            }
+            onClose();
         } catch (error) {
             console.error(error);
         }
@@ -38,7 +57,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="w-full max-w-md bg-card rounded-xl shadow-lg border border-border animate-in fade-in zoom-in-95">
                 <div className="flex items-center justify-between p-4 border-b border-border">
-                    <h2 className="text-lg font-semibold">Add Transaction</h2>
+                    <h2 className="text-lg font-semibold">{initialData ? 'Edit Transaction' : 'Add Transaction'}</h2>
                     <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
                         <X className="w-5 h-5" />
                     </button>
@@ -114,7 +133,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd }) {
                             Cancel
                         </Button>
                         <Button type="submit" disabled={loading} className="flex-1">
-                            {loading ? 'Adding...' : 'Add Transaction'}
+                            {loading ? (initialData ? 'Updating...' : 'Adding...') : (initialData ? 'Update Transaction' : 'Add Transaction')}
                         </Button>
                     </div>
                 </form>

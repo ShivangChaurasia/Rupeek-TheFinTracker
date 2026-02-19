@@ -5,7 +5,9 @@ import {
     where,
     orderBy,
     onSnapshot,
-    addDoc,
+    deleteDoc,
+    updateDoc,
+    doc,
     serverTimestamp,
     getAggregateFromServer,
     sum
@@ -115,5 +117,31 @@ export function useTransactions() {
         }
     };
 
-    return { transactions, totalBalance, loading, error, addTransaction };
+    const deleteTransaction = async (id) => {
+        if (!currentUser) return;
+        try {
+            await deleteDoc(doc(db, 'users', currentUser.uid, 'transactions', id));
+        } catch (err) {
+            console.error("Error deleting transaction:", err);
+            throw err;
+        }
+    };
+
+    const updateTransaction = async (id, data) => {
+        if (!currentUser) return;
+        try {
+            const transactionRef = doc(db, 'users', currentUser.uid, 'transactions', id);
+            await updateDoc(transactionRef, {
+                ...data,
+                amount: parseFloat(data.amount),
+                date: new Date(data.date),
+                updatedAt: serverTimestamp()
+            });
+        } catch (err) {
+            console.error("Error updating transaction:", err);
+            throw err;
+        }
+    };
+
+    return { transactions, totalBalance, loading, error, addTransaction, deleteTransaction, updateTransaction };
 }

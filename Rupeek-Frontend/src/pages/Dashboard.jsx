@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../context/AuthContext';
-import { Plus, TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownLeft, Pencil, Trash2 } from 'lucide-react';
 import Button from '../components/Button';
 import AddTransactionModal from '../components/AddTransactionModal';
 import { format } from 'date-fns';
@@ -9,9 +9,20 @@ import { format } from 'date-fns';
 import SalaryPrompt from '../components/SalaryPrompt';
 
 export default function Dashboard() {
-  const { currentUser, userProfile } = useAuth(); const { transactions, totalBalance, loading } = useTransactions();
+  const { currentUser, userProfile } = useAuth();
+  const { transactions, totalBalance, loading, addTransaction, deleteTransaction, updateTransaction } = useTransactions();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { addTransaction } = useTransactions();
+  const [editingTransaction, setEditingTransaction] = useState(null);
+
+  const handleEdit = (transaction) => {
+    setEditingTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingTransaction(null);
+  };
 
   const summary = transactions.reduce((acc, curr) => {
     const amount = parseFloat(curr.amount);
@@ -166,6 +177,26 @@ export default function Dashboard() {
                     }`}>
                     {transaction.type === 'income' ? '+' : '-'}₹{parseFloat(transaction.amount).toLocaleString()}
                   </div>
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => handleEdit(transaction)}
+                      className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+                      title="Edit"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to delete this transaction?')) {
+                          deleteTransaction(transaction.id);
+                        }
+                      }}
+                      className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -175,8 +206,10 @@ export default function Dashboard() {
 
       <AddTransactionModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onAdd={addTransaction}
+        onUpdate={updateTransaction}
+        initialData={editingTransaction}
       />
       <SalaryPrompt />
     </div>
