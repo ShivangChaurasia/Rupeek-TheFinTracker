@@ -67,9 +67,9 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                     <div className="flex gap-2 p-1 bg-muted rounded-lg">
                         <button
                             type="button"
-                            className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${formData.type === 'income'
-                                ? 'bg-background shadow-sm text-foreground'
-                                : 'text-muted-foreground hover:text-foreground'
+                            className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${formData.type === 'income'
+                                ? 'bg-green-100 text-green-700 shadow-sm border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                 }`}
                             onClick={() => setFormData({ ...formData, type: 'income', category: 'Salary' })}
                         >
@@ -77,9 +77,9 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                         </button>
                         <button
                             type="button"
-                            className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${formData.type === 'expense'
-                                ? 'bg-background shadow-sm text-foreground'
-                                : 'text-muted-foreground hover:text-foreground'
+                            className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${formData.type === 'expense'
+                                ? 'bg-red-100 text-red-700 shadow-sm border border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                 }`}
                             onClick={() => setFormData({ ...formData, type: 'expense', category: '' })}
                         >

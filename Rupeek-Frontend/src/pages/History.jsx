@@ -8,7 +8,9 @@ import AddTransactionModal from '../components/AddTransactionModal';
 
 export default function History() {
     const { transactions, loading, deleteTransaction, updateTransaction, addTransaction } = useTransactions();
-    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); const [searchTerm, setSearchTerm] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7));
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterType, setFilterType] = useState('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState(null);
 
@@ -27,9 +29,10 @@ export default function History() {
             const matchesMonth = isSameMonth(new Date(t.date), new Date(selectedMonth));
             const matchesSearch = t.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 t.note?.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesMonth && matchesSearch;
+            const matchesType = filterType === 'all' || t.type === filterType;
+            return matchesMonth && matchesSearch && matchesType;
         });
-    }, [transactions, selectedMonth, searchTerm]);
+    }, [transactions, selectedMonth, searchTerm, filterType]);
 
     const stats = useMemo(() => {
         return filteredTransactions.reduce((acc, curr) => {
@@ -130,8 +133,8 @@ export default function History() {
             </div>
 
             <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-border">
-                    <div className="relative">
+                <div className="p-4 border-b border-border flex gap-2">
+                    <div className="relative flex-1">
                         <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search transactions..."
@@ -140,6 +143,15 @@ export default function History() {
                             className="pl-9"
                         />
                     </div>
+                    <select
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                        className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    >
+                        <option value="all">All Types</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
                 </div>
 
                 {filteredTransactions.length === 0 ? (
