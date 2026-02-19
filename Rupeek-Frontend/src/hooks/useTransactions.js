@@ -8,6 +8,7 @@ import {
     deleteDoc,
     updateDoc,
     doc,
+    addDoc,
     serverTimestamp,
     getAggregateFromServer,
     sum
