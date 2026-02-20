@@ -60,8 +60,8 @@ export default {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
                 float: 'float 3s ease-in-out infinite',
-                swapRight: 'swapRight 2s ease-in-out infinite',
-                swapLeft: 'swapLeft 2s ease-in-out infinite',
+                swapRight: 'swapRight 1.5s ease-in-out infinite',
+                swapLeft: 'swapLeft 1.5s ease-in-out infinite',
             },
             keyframes: {
                 "accordion-down": {
@@ -78,11 +78,11 @@ export default {
                 },
                 swapRight: {
                     '0%, 100%': { transform: 'translateX(0)' },
-                    '50%': { transform: 'translateX(100%)' },
+                    '50%': { transform: 'translateX(10px)' },
                 },
                 swapLeft: {
                     '0%, 100%': { transform: 'translateX(0)' },
-                    '50%': { transform: 'translateX(-100%)' },
+                    '50%': { transform: 'translateX(-10px)' },
                 }
             },
         },
