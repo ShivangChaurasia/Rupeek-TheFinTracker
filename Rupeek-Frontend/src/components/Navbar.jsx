@@ -47,7 +47,7 @@ export default function Navbar() {
     <header className="border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-50 supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src={rupeekLogo} alt="Rupeek Logo" className="w-8 h-8 object-contain" />
+          <img src={rupeekLogo} alt="Rupeek Logo" className="w-8 h-8 object-contain animate-float" />
           <LogoText className="text-xl" />
         </Link>
 
