@@ -1,9 +1,10 @@
-import React from 'react';
-
 export default function LogoText({ className = "" }) {
     return (
-        <span className={`font-bold bg-gradient-to-r from-blue-600 via-[#ffb700] to-blue-600 bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer ${className}`}>
-            Rupeek
+        <span className={`font-bold text-blue-600 ${className}`}>
+            Rup
+            <span className="inline-block text-[#ffb700] animate-swap-right">e</span>
+            <span className="inline-block text-[#ffb700] animate-swap-left">e</span>
+            k
         </span>
     );
 }

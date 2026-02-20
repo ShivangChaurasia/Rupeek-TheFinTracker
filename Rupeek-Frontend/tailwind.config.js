@@ -60,7 +60,8 @@ export default {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
                 float: 'float 3s ease-in-out infinite',
-                shimmer: 'shimmer 8s linear infinite',
+                swapRight: 'swapRight 2s ease-in-out infinite',
+                swapLeft: 'swapLeft 2s ease-in-out infinite',
             },
             keyframes: {
                 "accordion-down": {
@@ -75,9 +76,13 @@ export default {
                     '0%, 100%': { transform: 'translateY(0)' },
                     '50%': { transform: 'translateY(-10px)' },
                 },
-                shimmer: {
-                    '0%': { backgroundPosition: '-200% center' },
-                    '100%': { backgroundPosition: '200% center' },
+                swapRight: {
+                    '0%, 100%': { transform: 'translateX(0)' },
+                    '50%': { transform: 'translateX(100%)' },
+                },
+                swapLeft: {
+                    '0%, 100%': { transform: 'translateX(0)' },
+                    '50%': { transform: 'translateX(-100%)' },
                 }
             },
         },
