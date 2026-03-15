@@ -13,8 +13,10 @@ import {
   Wallet,
   Menu,
   X,
-  Home
+  Home,
+  Sparkles
 } from 'lucide-react';
+
 import { cn } from '../utils/cn';
 import Button from './Button';
 import rupeekLogo from '../assets/rupeek.png';
@@ -41,7 +43,9 @@ export default function Navbar() {
     { icon: History, label: 'History', path: '/history' },
     { icon: PieChart, label: 'Analytics', path: '/analytics' },
     { icon: User, label: 'Profile', path: '/profile' },
+    { icon: Sparkles, label: 'AI Insights', path: '/ai-insights' },
   ];
+
 
   return (
     <header className="border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-50 supports-[backdrop-filter]:bg-background/60">

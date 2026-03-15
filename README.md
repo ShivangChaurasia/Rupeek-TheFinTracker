@@ -30,10 +30,17 @@ Live Link: https://rupeekfinances.vercel.app
 -   **Transaction History**: Complete log of all financial movements with search and filter capabilities.
 -   **Data Export**: Export your financial history to **CSV** for external analysis.
 
-### 📈 **Detailed Analytics**
+### 📉 **Detailed Analytics**
 -   **Expense Breakdown**: Deep dive into where your money goes with category-wise pie charts.
 -   **Daily Trends**: Visualize your spending habits over the month with daily bar charts.
 -   **Income Analysis**: Understand your revenue streams better.
+
+### 🤖 **Smart AI Insights**
+-   **AI Financial Advisor**: Personalized financial advice powered by **Groq (Llama 3)**.
+-   **Expense Summary**: Intelligent breakdown of spending habits.
+-   **Savings Tips**: Actionable advice to help you save more.
+-   **Financial Health Alerts**: Real-time warnings about overspending.
+
 
 ### 👤 **Account Management**
 -   **Profile Control**: easy-to-use profile section.
@@ -88,7 +95,9 @@ Follow these steps to set up the project locally on your machine.
     VITE_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
     VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
     VITE_FIREBASE_APP_ID=your_app_id
+    VITE_GROQ_API_KEY=your_groq_api_key
     ```
+
 
 4.  **Run the development server**
     ```bash

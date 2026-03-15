@@ -13,6 +13,8 @@ import Onboarding from './pages/Onboarding';
 import History from './pages/History';
 import Analytics from './pages/Analytics';
 import Profile from './pages/Profile';
+import AIInsights from './pages/AIInsights';
+
 
 function App() {
   return (
@@ -34,7 +36,9 @@ function App() {
                 <Route path="/history" element={<History />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/ai-insights" element={<AIInsights />} />
               </Route>
+
 
               <Route path="/onboarding" element={
                 <ProtectedRoute>
