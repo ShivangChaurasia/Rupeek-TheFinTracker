@@ -251,9 +251,13 @@ export default function AIInsights() {
                         <p className="text-xs text-destructive">{error}</p>
                         <button onClick={() => setError(null)} className="ml-auto text-xs font-bold hover:underline">Dismiss</button>
                     </div>
-                    <div className="text-[10px] text-destructive/60 bg-background/50 p-2 rounded-lg font-mono">
-                        Build Status: {import.meta.env.VITE_GROQ_API_KEY ? "✅ Key Found" : "❌ Key Missing in Build"}
+                    <div className="text-[10px] text-destructive/60 bg-background/50 p-2 rounded-lg font-mono space-y-1">
+                        <div>Build Status: {import.meta.env.VITE_GROQ_API_KEY ? "✅ Key Found" : "❌ Key Missing"}</div>
+                        <div className="border-t border-destructive/10 pt-1 mt-1">
+                            Detected Keys: {Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')).join(', ') || 'None'}
+                        </div>
                     </div>
+
                 </div>
             ) : null}
 
