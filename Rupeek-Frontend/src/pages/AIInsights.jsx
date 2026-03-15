@@ -251,12 +251,24 @@ export default function AIInsights() {
                         <p className="text-xs text-destructive">{error}</p>
                         <button onClick={() => setError(null)} className="ml-auto text-xs font-bold hover:underline">Dismiss</button>
                     </div>
-                    <div className="text-[10px] text-destructive/60 bg-background/50 p-2 rounded-lg font-mono space-y-1">
-                        <div>Build Status: {import.meta.env.VITE_GROQ_API_KEY ? "✅ Key Found" : "❌ Key Missing"}</div>
-                        <div className="border-t border-destructive/10 pt-1 mt-1">
-                            Detected Keys: {Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')).join(', ') || 'None'}
+                    <div className="text-[10px] text-destructive/60 bg-background/50 p-2 rounded-lg font-mono space-y-2">
+                        <div className="flex justify-between">
+                            <span>Status:</span>
+                            <span className="font-bold">{import.meta.env.VITE_GROQ_API_KEY ? "✅ Detected" : "❌ Not Detected"}</span>
+                        </div>
+                        <div className="border-t border-destructive/10 pt-2">
+                             <p className="mb-1 text-[9px] uppercase tracking-wider opacity-70">Detected VITE_ Config:</p>
+                             <div className="flex flex-wrap gap-1">
+                                {Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')).map(k => (
+                                    <span key={k} className="bg-destructive/5 px-1 rounded">{k}</span>
+                                ))}
+                             </div>
+                        </div>
+                        <div className="bg-destructive/5 p-2 rounded border border-destructive/10 mt-2 italic text-[9px]">
+                            Tip: If not detected, ensure the name in Vercel is exactly "VITE_GROQ_API_KEY" and trigger a "Redeploy" without "Build Cache".
                         </div>
                     </div>
+
 
                 </div>
             ) : null}
