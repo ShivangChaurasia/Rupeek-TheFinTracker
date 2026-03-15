@@ -1,17 +1,12 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const VITE_GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-
-/**
- * Sends transaction data and chat history to Groq API to get financial insights.
- * @param {Array} chatHistory - Array of message objects {role: 'user' | 'assistant', content: string}
- * @param {Array} transactions - List of transactions
- * @param {Object} userProfile - User profile data (income, currency, etc.)
- * @returns {Promise<string>} - AI generated response
- */
 export async function getChatResponse(chatHistory, transactions, userProfile) {
-    if (!VITE_GROQ_API_KEY) {
-        throw new Error("Groq API key is missing. Please add VITE_GROQ_API_KEY to your .env file.");
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+
+    if (!apiKey) {
+        console.error("DEBUG: VITE_GROQ_API_KEY is missing from environment.");
+        throw new Error("Groq API key is missing. Please ensure VITE_GROQ_API_KEY is set in Vercel and you have redeployed without cache.");
     }
+
 
     const transactionSummary = transactions.map(t => ({
         category: t.category,
@@ -46,9 +41,10 @@ export async function getChatResponse(chatHistory, transactions, userProfile) {
         const response = await fetch(GROQ_API_URL, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${VITE_GROQ_API_KEY}`,
+                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             },
+
             body: JSON.stringify({
                 model: "llama-3.3-70b-versatile",
                 messages: [

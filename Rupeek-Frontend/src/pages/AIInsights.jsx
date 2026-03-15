@@ -244,14 +244,19 @@ export default function AIInsights() {
                 )}
             </div>
 
-            {/* Error Message */}
-            {error && (
-                <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 flex items-center gap-3 animate-in fade-in">
-                    <Sparkles className="w-4 h-4 text-destructive" />
-                    <p className="text-xs text-destructive">{error}</p>
-                    <button onClick={() => setError(null)} className="ml-auto text-xs font-bold hover:underline">Dismiss</button>
+            {error ? (
+                <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 flex flex-col gap-2 animate-in fade-in">
+                    <div className="flex items-center gap-3">
+                        <Sparkles className="w-4 h-4 text-destructive" />
+                        <p className="text-xs text-destructive">{error}</p>
+                        <button onClick={() => setError(null)} className="ml-auto text-xs font-bold hover:underline">Dismiss</button>
+                    </div>
+                    <div className="text-[10px] text-destructive/60 bg-background/50 p-2 rounded-lg font-mono">
+                        Build Status: {import.meta.env.VITE_GROQ_API_KEY ? "✅ Key Found" : "❌ Key Missing in Build"}
+                    </div>
                 </div>
-            )}
+            ) : null}
+
 
             {/* Input Area */}
             <form 
