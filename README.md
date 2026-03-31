@@ -116,6 +116,21 @@ The project is optimized for deployment on **Vercel**.
     ```
 2.  Deploy using Vercel CLI or Dashboard (Don't forget to add environment variables in Vercel settings).
 
+
+---
+## 🚧 iOS App (SwiftUI) – In Progress
+
+Currently building the iOS version of Rupeek using SwiftUI.
+
+Planned Features:
+- Native dashboard with Swift Charts
+- CoreData-based offline storage
+- AI financial insights integration
+- REST API integration with Firebase backend
+- MVVM architecture
+
+Goal: Deliver a production-grade iOS experience aligned with modern Apple design guidelines.
+
 ## 👤 Author
 
 **Shivang Chaurasia**
