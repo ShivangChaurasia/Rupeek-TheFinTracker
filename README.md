@@ -1,4 +1,4 @@
-# Rupeek - Master Your Finances 🚀
+# Rupeek - AI-Powered Personal Finanace System🚀
 ---
 > **Financial Freedom, Simplified.**
 > Experience the future of personal finance with Rupeek. Smart tracking, custom salary cycles, and premium analytics designed for the modern earner.
