@@ -18,14 +18,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [countdown, setCountdown] = useState(null);
-  const { login, loginWithGoogle, currentUser } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentUser && !showSuccess) {
-      navigate('/dashboard');
-    }
-  }, [currentUser, navigate, showSuccess]);
 
   useEffect(() => {
     let timer;
