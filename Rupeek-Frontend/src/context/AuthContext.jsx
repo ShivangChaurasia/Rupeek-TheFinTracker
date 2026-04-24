@@ -5,12 +5,14 @@ import {
     createUserWithEmailAndPassword,
     signOut,
     signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     GoogleAuthProvider,
     updatePassword,
     reauthenticateWithCredential,
     EmailAuthProvider
 } from "firebase/auth";
-import { doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { doc, onSnapshot, deleteDoc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db, googleProvider } from "../firebase/config";
 
 const AuthContext = createContext();
@@ -33,7 +35,7 @@ export function AuthProvider({ children }) {
     }
 
     function loginWithGoogle() {
-        return signInWithPopup(auth, googleProvider);
+        return signInWithRedirect(auth, googleProvider);
     }
 
     function logout() {
@@ -42,6 +44,28 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         let profileUnsubscribe;
+
+        const handleRedirect = async () => {
+            try {
+                const result = await getRedirectResult(auth);
+                if (result && result.user) {
+                    const userRef = doc(db, 'users', result.user.uid);
+                    const docSnap = await getDoc(userRef);
+                    if (!docSnap.exists()) {
+                        await setDoc(userRef, {
+                            email: result.user.email,
+                            name: result.user.displayName || '',
+                            createdAt: serverTimestamp(),
+                            isOnboarded: false
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Redirect login error:", error);
+            }
+        };
+
+        handleRedirect();
 
         const authUnsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);

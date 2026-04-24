@@ -21,8 +21,14 @@ export default function Signup() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [countdown, setCountdown] = useState(null);
 
-  const { signup, loginWithGoogle: signupWithGoogle } = useAuth();
+  const { signup, loginWithGoogle: signupWithGoogle, currentUser } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser && !showSuccess) {
+      navigate('/onboarding');
+    }
+  }, [currentUser, navigate, showSuccess]);
 
   useEffect(() => {
     let timer;
@@ -198,7 +204,8 @@ export default function Signup() {
                   try {
                     setError('');
                     setLoading(true);
-                    await signupWithGoogle(); handleSuccess();
+                    await signupWithGoogle(); 
+                    // Redirect handles the rest
                   } catch (err) {
                     setError('Failed to sign up with Google: ' + err.message);
                     setLoading(false);

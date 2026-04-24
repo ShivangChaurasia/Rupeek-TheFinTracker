@@ -18,8 +18,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [countdown, setCountdown] = useState(null);
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, currentUser } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser && !showSuccess) {
+      navigate('/dashboard');
+    }
+  }, [currentUser, navigate, showSuccess]);
 
   useEffect(() => {
     let timer;
@@ -189,7 +195,7 @@ export default function Login() {
                     setError('');
                     setLoading(true);
                     await loginWithGoogle();
-                    handleSuccess();
+                    // Redirect handles the rest.
                   } catch (err) {
                     setError('Failed to login with Google: ' + err.message);
                     setLoading(false);
