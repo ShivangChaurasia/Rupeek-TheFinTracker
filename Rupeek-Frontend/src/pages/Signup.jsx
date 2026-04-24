@@ -205,7 +205,7 @@ export default function Signup() {
                     setError('');
                     setLoading(true);
                     await signupWithGoogle(); 
-                    // Redirect handles the rest
+                    handleSuccess();
                   } catch (err) {
                     setError('Failed to sign up with Google: ' + err.message);
                     setLoading(false);

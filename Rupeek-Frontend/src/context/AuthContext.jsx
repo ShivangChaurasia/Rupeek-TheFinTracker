@@ -34,8 +34,16 @@ export function AuthProvider({ children }) {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
-    function loginWithGoogle() {
-        return signInWithRedirect(auth, googleProvider);
+    async function loginWithGoogle() {
+        try {
+            return await signInWithPopup(auth, googleProvider);
+        } catch (error) {
+            if (error.code === 'auth/popup-blocked') {
+                console.warn("Popup blocked, falling back to redirect...");
+                return signInWithRedirect(auth, googleProvider);
+            }
+            throw error;
+        }
     }
 
     function logout() {

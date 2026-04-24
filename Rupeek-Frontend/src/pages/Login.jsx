@@ -195,7 +195,7 @@ export default function Login() {
                     setError('');
                     setLoading(true);
                     await loginWithGoogle();
-                    // Redirect handles the rest.
+                    handleSuccess();
                   } catch (err) {
                     setError('Failed to login with Google: ' + err.message);
                     setLoading(false);
