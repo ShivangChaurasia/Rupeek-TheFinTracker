@@ -21,8 +21,14 @@ export default function Signup() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [countdown, setCountdown] = useState(null);
 
-  const { signup, loginWithGoogle: signupWithGoogle } = useAuth();
+  const { signup, loginWithGoogle: signupWithGoogle, currentUser } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser && !showSuccess) {
+      handleSuccess();
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     let timer;
