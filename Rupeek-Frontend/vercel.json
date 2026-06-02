@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/__/auth/:path*",
+            "destination": "https://rupeek-thefintraker.firebaseapp.com/__/auth/:path*"
+        },
+        {
             "source": "/(.*)",
             "destination": "/"
         }
