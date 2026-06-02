@@ -5,6 +5,8 @@ import {
     createUserWithEmailAndPassword,
     signOut,
     signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     GoogleAuthProvider,
     updatePassword,
     reauthenticateWithCredential,
@@ -32,8 +34,21 @@ export function AuthProvider({ children }) {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
-    function loginWithGoogle() {
-        return signInWithPopup(auth, googleProvider);
+    async function loginWithGoogle() {
+        try {
+            return await signInWithPopup(auth, googleProvider);
+        } catch (error) {
+            console.error('Google Login Error:', error);
+            if (
+                error.code === 'auth/popup-blocked' ||
+                error.code === 'auth/cancelled-popup-request' ||
+                error.code === 'auth/operation-not-supported-in-this-environment'
+            ) {
+                console.log('Popup blocked or not supported, falling back to signInWithRedirect...');
+                return await signInWithRedirect(auth, googleProvider);
+            }
+            throw error;
+        }
     }
 
     function logout() {
@@ -42,6 +57,15 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         let profileUnsubscribe;
+
+        const checkRedirect = async () => {
+            try {
+                await getRedirectResult(auth);
+            } catch (error) {
+                console.error("Redirect sign-in error:", error);
+            }
+        };
+        checkRedirect();
 
         const authUnsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
@@ -84,7 +108,20 @@ export function AuthProvider({ children }) {
 
         try {
             if (currentUser.providerData.some(p => p.providerId === 'google.com')) {
-                await signInWithPopup(auth, googleProvider);
+                try {
+                    await signInWithPopup(auth, googleProvider);
+                } catch (popupError) {
+                    if (
+                        popupError.code === 'auth/popup-blocked' ||
+                        popupError.code === 'auth/cancelled-popup-request' ||
+                        popupError.code === 'auth/operation-not-supported-in-this-environment'
+                    ) {
+                        console.log('Popup blocked, falling back to signInWithRedirect...');
+                        await signInWithRedirect(auth, googleProvider);
+                        return;
+                    }
+                    throw popupError;
+                }
             } else if (password) {
                 await reauthenticate(password);
             } else {
