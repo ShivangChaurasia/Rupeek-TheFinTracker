@@ -185,10 +185,11 @@ export default function Login() {
                 variant="outline"
                 className="w-full h-12 gap-2"
                 onClick={async () => {
+                  setError('');
+                  const loginPromise = loginWithGoogle();
+                  setLoading(true);
                   try {
-                    setError('');
-                    setLoading(true);
-                    await loginWithGoogle();
+                    await loginPromise;
                     handleSuccess();
                   } catch (err) {
                     setError('Failed to login with Google: ' + err.message);

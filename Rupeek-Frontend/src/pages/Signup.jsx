@@ -195,10 +195,12 @@ export default function Signup() {
                 variant="outline"
                 className="w-full h-12 gap-2"
                 onClick={async () => {
+                  setError('');
+                  const loginPromise = signupWithGoogle();
+                  setLoading(true);
                   try {
-                    setError('');
-                    setLoading(true);
-                    await signupWithGoogle(); handleSuccess();
+                    await loginPromise; 
+                    handleSuccess();
                   } catch (err) {
                     setError('Failed to sign up with Google: ' + err.message);
                     setLoading(false);
